@@ -1,6 +1,9 @@
 var listKanap = []
+//-----on récupère les données de l'API-----
 fetch("http://localhost:3000/api/products")
+//-----première promesse pour récupérer la réponse en json-----
   .then(response => response.json())
+//-----deuxième promesse pourrécupérer les données-----
   .then(function(result) {
     listKanap = result;
     console.log('Result', result);
@@ -12,26 +15,25 @@ fetch("http://localhost:3000/api/products")
 //-----on met en place la relation parent/enfant-----
 //-----élément contenant les données, les liens des produits(card)-----
             let eltA = document.createElement('a');
-            eltA.href = "./product.html?id=" + article._id;           
+            eltA.href =`./product.html?id=${article._id}`;           
 //-----éléments des produits-----
             let eltArticle = document.createElement('article');
 //-----images des produits + textes descriptifs-----
             let eltImage = document.createElement('img');
-            eltImage.src = article.imageUrl;
-            eltImage.alt = article.altTxt;
+            eltImage.src =`${article.imageUrl}`;
+            eltImage.alt = `${article.altTt}`;
             eltArticle.appendChild(eltImage);
 //-----noms des produits-----
             let eltName = document.createElement('h3');
-            eltName.innerText = article.name;
+            eltName.innerText = `${article.name}`;
             eltArticle.appendChild(eltName);
 //-----descriptions des produits-----
             let eltDescription = document.createElement('p');
-            eltDescription.innerText = article.description;
+            eltDescription.innerText = `${article.description}`;
             eltArticle.appendChild(eltDescription);
 
             articleItems.appendChild(eltA);
-            eltA.appendChild(eltArticle);
-
+            eltA.appendChild(eltArticle)
         }
   }
   )
