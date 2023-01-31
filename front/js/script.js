@@ -21,7 +21,7 @@ fetch("http://localhost:3000/api/products")
 //-----images des produits + textes descriptifs-----
             let eltImage = document.createElement('img');
             eltImage.src =`${article.imageUrl}`;
-            eltImage.alt = `${article.altTt}`;
+            eltImage.alt = `${article.altTxt}`;
             eltArticle.appendChild(eltImage);
 //-----noms des produits-----
             let eltName = document.createElement('h3');
