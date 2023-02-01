@@ -3,16 +3,19 @@ const cartSelect = window.localStorage.getItem('cart');
 console.log(cartSelect)
 const positionCart = document.getElementById('cart__items');
 
+function getCart() {
 //-----Si le panier est vide-----
-if (cartSelect === 0) {
-    alert ('Votre panier est vide!');
-} else {
-fetch("http://localhost:3000/api/products" + articleId)
-    .then(response => response.json())
-    .then(function(datas) {
+    if (cartSelect === 0 || cartSelect === null) {
+        document.querySelector('h1').textContent = 'Votre panier est vide';
+    } else {
+    fetch("http://localhost:3000/api/products/")
+//-----modification de la partie #cart_items dans cart.html
+        .then(response => response.json())
+        .then(function(datas) {
 //----- L'élément article-----
             let productArticle = document.createElement('article');
             positionCart.appendChild(productArticle);
+            productArticle.className = "cart__items";
             productArticle = datas._id;
 
 //-----L'élément div image-----
@@ -29,9 +32,62 @@ fetch("http://localhost:3000/api/products" + articleId)
             let productDivContent = document.createElement('div');
             productArticle.appendChild(productDivContent);
             productDivContent.className = 'cart__item__content';
-        
+    
 //-----L'élément div-----
-            let productDivConten
-        }
-)
+            let productDivContentDescription = document.createElement('div');
+            productDivContent.appendChild(productDivContentDescription);
+            productDivContentDescription.className = 'cart__item__content__description';
+
+//-----L'élément h2-----
+            let productTitle = document.createElement('h2');
+            productDivContentDescription.appendChild(productTitle);
+            productTitle.textContent = datas.name;
+            
+//-----L'élément paragraphe: couleur-----
+            let productColor = document.createElement('p');
+            productDivContentDescription.appendChild(productColor);
+            productColor.textContent = cartSelect.couleurProduit;
+
+//-----L'élément paragraphe: prix-----
+            let productPrice = document.createElement('p');
+            productDivContentDescription.appendChild(productPrice);
+            productPrice.textContent = datas.price +"€";
+        
+//-----L'élément div settings-----
+            let productDivSettings = document.createElement('div');
+            productDivContent.appendChild(productDivSettings);
+            productDivSettings.className = 'cart__item__content__settings';
+
+//-----L'élément div settings quantity-----
+            let productDivSettingsQuantity = document.createElement('div');
+            productDivSettings.appendChild(productDivSettingsQuantity);
+            productDivSettingsQuantity.className = 'cart__item__content__settings__quantity';
+
+//-----L'élément paragraphe: quantité-----
+            let productQuantity = document.createElement('p');
+            productDivSettingsQuantity.appendChild(productQuantity);
+            productQuantity.textContent = "Qté : ";
+
+//-----L'élément input-----
+            let productInput = document.createElement('input');
+            productDivSettingsQuantity.appendChild(productInput);
+            productInput.className = 'itemQuantity';
+            productInput.setAttribute('type', 'number');
+            productInput.setAttribute('name', 'itemQuantity');
+            productInput.setAttribute('min', '1');
+            productInput.setAttribute('max', '100');
+
+//-----L'élément supprimer-----
+            let productSettingsDelete = document.createElement('div');
+            productDivSettings.appendChild(productSettingsDelete);
+            productSettingsDelete.className = 'cart__item__content__settings__delete';
+    
+//-----L'élément paragraphe: supprimer-----
+            let productDelete = document.createElement('p');
+            productSettingsDelete.appendChild(productDelete);
+            productDelete.className = 'deleteItem';
+            productDelete.innerHTML = 'Supprimer';
+    })
+}
 };
+
