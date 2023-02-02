@@ -1,22 +1,32 @@
 //-----récupération des données dans le Local Storage-----
 const cartSelect = window.localStorage.getItem('cart');
+const cart = JSON.parse(cartSelect);
 console.log(cartSelect)
-const positionCart = document.getElementById('cart__items');
 
-function getCart() {
+//-----Tableau vide pour mettre les données-----
+let products = [];
+
 //-----Si le panier est vide-----
     if (cartSelect === 0 || cartSelect === null) {
         document.querySelector('h1').textContent = 'Votre panier est vide';
+//-----Si il contient au moins un produit-----
     } else {
-    fetch("http://localhost:3000/api/products/")
-//-----modification de la partie #cart_items dans cart.html
+        document.querySelector('h1').textContent = 'Contenu de votre panier';
+    };
+//-----Récupération des données de l'API-----
+        fetch("http://localhost:3000/api/products/")
         .then(response => response.json())
-        .then(function(datas) {
-//----- L'élément article-----
+        .then(datas => {
+        products = datas;
+//-----Insertion des éléments dans cart__items-----
+const positionCart = document.getElementById('cart__items');
+            for (let productCart of products) {
+//-----L'élément article-----
             let productArticle = document.createElement('article');
             positionCart.appendChild(productArticle);
             productArticle.className = "cart__items";
-            productArticle = datas._id;
+            productArticle.setAttribute('data-id', productCart.id)
+            productArticle.setAttribute('data-color', productCart.couleurProduit)
 
 //-----L'élément div image-----
             let productDivImage = document.createElement('div');
@@ -26,8 +36,8 @@ function getCart() {
 //-----L'élément image-----
             let productImage = document.createElement('img');
             productDivImage.appendChild(productImage);
-            productImage.src = datas.imageUrl;
-            productImage.alt = datas.altTxt;
+            productImage.src = productCart.imageUrl;
+            productImage.alt = productCart.altTxt;
 //-----L'élément div-----
             let productDivContent = document.createElement('div');
             productArticle.appendChild(productDivContent);
@@ -41,17 +51,17 @@ function getCart() {
 //-----L'élément h2-----
             let productTitle = document.createElement('h2');
             productDivContentDescription.appendChild(productTitle);
-            productTitle.textContent = datas.name;
+            productTitle.textContent = productCart.name;
             
 //-----L'élément paragraphe: couleur-----
             let productColor = document.createElement('p');
             productDivContentDescription.appendChild(productColor);
-            productColor.textContent = cartSelect.couleurProduit;
+            productColor.textContent = productCart.couleurProduit;
 
 //-----L'élément paragraphe: prix-----
             let productPrice = document.createElement('p');
             productDivContentDescription.appendChild(productPrice);
-            productPrice.textContent = datas.price +"€";
+            productPrice.textContent = productCart.price +"€";
         
 //-----L'élément div settings-----
             let productDivSettings = document.createElement('div');
@@ -87,7 +97,5 @@ function getCart() {
             productSettingsDelete.appendChild(productDelete);
             productDelete.className = 'deleteItem';
             productDelete.innerHTML = 'Supprimer';
-    })
-}
-};
-
+            }
+        });
