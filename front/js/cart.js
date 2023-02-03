@@ -1,10 +1,7 @@
 //-----récupération des données dans le Local Storage-----
-const cartSelect = window.localStorage.getItem('cart');
-const cart = JSON.parse(cartSelect);
+const cartSelect = JSON.parse(localStorage.getItem('cart'));
 console.log(cartSelect)
-
-//-----Tableau vide pour mettre les données-----
-let products = [];
+const positionCart = document.getElementById('cart__items');
 
 //-----Si le panier est vide-----
     if (cartSelect === 0 || cartSelect === null) {
@@ -12,21 +9,19 @@ let products = [];
 //-----Si il contient au moins un produit-----
     } else {
         document.querySelector('h1').textContent = 'Contenu de votre panier';
-    };
-//-----Récupération des données de l'API-----
-        fetch("http://localhost:3000/api/products/")
-        .then(response => response.json())
-        .then(datas => {
-        products = datas;
+
 //-----Insertion des éléments dans cart__items-----
-const positionCart = document.getElementById('cart__items');
-            for (let productCart of products) {
+    for (let datas of cartSelect) {
+//-----Récupération des données de l'API-----
+fetch("http://localhost:3000/api/products/" + datas.id)
+    .then(response => response.json())
+    .then(datas => {
 //-----L'élément article-----
             let productArticle = document.createElement('article');
             positionCart.appendChild(productArticle);
             productArticle.className = "cart__items";
-            productArticle.setAttribute('data-id', productCart.id)
-            productArticle.setAttribute('data-color', productCart.couleurProduit)
+            productArticle.setAttribute('data-id', cartSelect.id)
+            productArticle.setAttribute('data-color',cartSelect.couleurProduit)
 
 //-----L'élément div image-----
             let productDivImage = document.createElement('div');
@@ -36,13 +31,13 @@ const positionCart = document.getElementById('cart__items');
 //-----L'élément image-----
             let productImage = document.createElement('img');
             productDivImage.appendChild(productImage);
-            productImage.src = productCart.imageUrl;
-            productImage.alt = productCart.altTxt;
+            productImage.src = datas.imageUrl;
+            productImage.alt = datas.altTxt;
 //-----L'élément div-----
             let productDivContent = document.createElement('div');
             productArticle.appendChild(productDivContent);
             productDivContent.className = 'cart__item__content';
-    
+
 //-----L'élément div-----
             let productDivContentDescription = document.createElement('div');
             productDivContent.appendChild(productDivContentDescription);
@@ -51,17 +46,17 @@ const positionCart = document.getElementById('cart__items');
 //-----L'élément h2-----
             let productTitle = document.createElement('h2');
             productDivContentDescription.appendChild(productTitle);
-            productTitle.textContent = productCart.name;
-            
+            productTitle.textContent = datas.name;
+
 //-----L'élément paragraphe: couleur-----
             let productColor = document.createElement('p');
             productDivContentDescription.appendChild(productColor);
-            productColor.textContent = productCart.couleurProduit;
+            productColor.textContent = cartSelect.couleurProduit;
 
-//-----L'élément paragraphe: prix-----
+                   //-----L'élément paragraphe: prix-----
             let productPrice = document.createElement('p');
             productDivContentDescription.appendChild(productPrice);
-            productPrice.textContent = productCart.price +"€";
+            productPrice.textContent = datas.price +"€";
         
 //-----L'élément div settings-----
             let productDivSettings = document.createElement('div');
@@ -86,6 +81,7 @@ const positionCart = document.getElementById('cart__items');
             productInput.setAttribute('name', 'itemQuantity');
             productInput.setAttribute('min', '1');
             productInput.setAttribute('max', '100');
+            productInput.value = cartSelect.quantiteProduit;
 
 //-----L'élément supprimer-----
             let productSettingsDelete = document.createElement('div');
@@ -97,5 +93,6 @@ const positionCart = document.getElementById('cart__items');
             productSettingsDelete.appendChild(productDelete);
             productDelete.className = 'deleteItem';
             productDelete.innerHTML = 'Supprimer';
-            }
-        });
+        }
+        )}
+        };
