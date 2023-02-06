@@ -11,17 +11,17 @@ const positionCart = document.getElementById('cart__items');
         document.querySelector('h1').textContent = 'Contenu de votre panier';
 
 //-----Insertion des éléments dans cart__items-----
-    for (let datas of cartSelect) {
+    for (let cart of cartSelect) {
 //-----Récupération des données de l'API-----
-fetch("http://localhost:3000/api/products/" + datas.id)
+fetch("http://localhost:3000/api/products/" + cart.id)
     .then(response => response.json())
     .then(datas => {
 //-----L'élément article-----
             let productArticle = document.createElement('article');
             positionCart.appendChild(productArticle);
             productArticle.className = "cart__items";
-            productArticle.setAttribute('data-id', cartSelect.id)
-            productArticle.setAttribute('data-color',cartSelect.couleurProduit)
+            productArticle.setAttribute('data-id', cart.id)
+            productArticle.setAttribute('data-color',cart.couleurProduit)
 
 //-----L'élément div image-----
             let productDivImage = document.createElement('div');
@@ -51,9 +51,9 @@ fetch("http://localhost:3000/api/products/" + datas.id)
 //-----L'élément paragraphe: couleur-----
             let productColor = document.createElement('p');
             productDivContentDescription.appendChild(productColor);
-            productColor.textContent = cartSelect.couleurProduit;
+            productColor.textContent = 'Couleur : ' + cart.couleurProduit;
 
-                   //-----L'élément paragraphe: prix-----
+//-----L'élément paragraphe: prix-----
             let productPrice = document.createElement('p');
             productDivContentDescription.appendChild(productPrice);
             productPrice.textContent = datas.price +"€";
@@ -81,7 +81,7 @@ fetch("http://localhost:3000/api/products/" + datas.id)
             productInput.setAttribute('name', 'itemQuantity');
             productInput.setAttribute('min', '1');
             productInput.setAttribute('max', '100');
-            productInput.value = cartSelect.quantiteProduit;
+            productInput.value = cart.quantiteProduit;
 
 //-----L'élément supprimer-----
             let productSettingsDelete = document.createElement('div');
@@ -93,6 +93,8 @@ fetch("http://localhost:3000/api/products/" + datas.id)
             productSettingsDelete.appendChild(productDelete);
             productDelete.className = 'deleteItem';
             productDelete.innerHTML = 'Supprimer';
+
         }
         )}
         };
+
