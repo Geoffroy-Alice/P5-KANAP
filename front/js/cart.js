@@ -94,7 +94,32 @@ fetch("http://localhost:3000/api/products/" + cart.id)
             productDelete.className = 'deleteItem';
             productDelete.innerHTML = 'Supprimer';
 
+//-----Total du prix et quantité-----
+    let totalArticle = 0;
+    let totalPrice = 0;
+    let totalProduct = 0;
+        for (i = 0; i < cartSelect.length; i++) {
+            for (i = 0; i < datas.length; i++) {
+            if(datas[i].id == cartSelect[i].id) {
+            totalArticle += parseInt(cartSelect[i].quantiteProduit);
+            totalProduct = parseInt(datas[i].price * cartSelect[i].quantiteProduit);
+            totalPrice += parseInt(datas.price[i] * cartSelect[i].quantiteProduit);
+            }
         }
-        )}
-        };
+        }
+        console.log(totalArticle);
+        let quantityFinal = document.querySelector('#totalQuantity');
+        quantityFinal.textContent = totalArticle;
+        let priceFinal = document.querySelector('#totalPrice');
+        priceFinal.textContent = totalPrice;
+        
 
+//-----Modification produit-----
+
+
+//-----Suppression produit-----
+
+    })
+    }};
+
+//-----Validation de formulaire-----
