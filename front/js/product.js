@@ -32,7 +32,6 @@ fetch("http://localhost:3000/api/products/" + articleId)
 
 //-----couleur du produit-----
         const colorsKanap = document.querySelector('#colors');
-        console.log(data.colors)
             for(let colors of data.colors) {
                 let colorOption = document.createElement('option');
                 colorOption.innerText = colors;
@@ -102,5 +101,5 @@ fetch("http://localhost:3000/api/products/" + articleId)
                 localStorage.setItem('cart', JSON.stringify(cartSelect));
             }
         };
-}
+        }
         });
