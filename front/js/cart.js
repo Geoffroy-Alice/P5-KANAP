@@ -1,10 +1,10 @@
 //-----récupération des données dans le Local Storage-----
-var cartSelect = JSON.parse(localStorage.getItem('cart'));
+let cartSelect = JSON.parse(localStorage.getItem('cart'));
 console.log(cartSelect);
 const positionCart = document.getElementById('cart__items');
 let kanaps = [];
 
-function allcart() {
+async function allcart() {
 //-----Si le panier est vide-----
     if (cartSelect === 0 || cartSelect === null) {
         document.querySelector('h1').textContent = 'Votre panier est vide';
@@ -101,38 +101,33 @@ fetch("http://localhost:3000/api/products/" + cart.id)
 }
 allcart();
 
-function articleCart() {
-
+function articlePriceCart() {
 //-----Calcul du nombre d'articles dans le panier-----
     let totalArticle = 0; 
+    let totalPrice = 0;
 
-    for (i = 0; i < cartSelect.length; i++) {
-        totalArticle += parseInt(cartSelect[i].quantiteProduit);
+    for (let datas of cartSelect) {
+        totalArticle = parseInt(totalArticle) + parseInt(datas.quantiteProduit);
         let quantityFinal = document.querySelector('#totalQuantity');
         quantityFinal.textContent = totalArticle;
         console.log(totalArticle);
-    }
-}
-function priceCart() {
-    var cartSelect = JSON.parse(localStorage.getItem('cart'));
-    fetch("http://localhost:3000/api/products/")
-    .then(response => response.json())
-//-----deuxième promesse pourrécupérer les données-----
-      .then(function(result) {
-        kanaps = result;
-        console.log(kanaps);
-            for (i = 0; i < kanaps.length; i++) {
-                    let priceArt = kanaps[i].price;
-//-----On calcul le total par produit(même id et même couleur)-----
-//-----on calcul le prix total du panier(somme de tous les prix)-----
-                totalPrice += parseInt(cartSelect.quantiteProduit * priceArt.price);
-                let priceFinal = document.querySelector('#totalPrice');    
-                priceFinal.textContent = totalPrice;
 
-            }}
-    )
-}
-priceCart();
+    fetch("http://localhost:3000/api/products/" + datas.id)
+        .then(response => response.json())
+    //-----deuxième promesse pourrécupérer les données-----
+        .then(function(result) {
+            kanaps = result;
+            console.log(kanaps);
+                    totalPrice = totalPrice + datas.quantiteProduit * kanaps.price;
+                    console.log(kanaps.price);
+                    console.log(datas.quantiteProduit);
+                    let finalPrice = document.querySelector('#totalPrice');
+                    finalPrice.textContent = totalPrice;
+                    console.log(totalPrice);
+        }
+    ) } 
+    }
+articlePriceCart();
 
 //-----Modification produit-----
 function changeQty() {
