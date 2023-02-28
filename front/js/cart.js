@@ -79,12 +79,23 @@ fetch("http://localhost:3000/api/products/" + cart.id)
             let productInput = document.createElement('input');
             productDivSettingsQuantity.appendChild(productInput);
             productInput.className = 'itemQuantity';
+            productInput.setAttribute('id', 'itemQuantity');
             productInput.setAttribute('type', 'number');
             productInput.setAttribute('name', 'itemQuantity');
             productInput.setAttribute('min', '1');
             productInput.setAttribute('max', '100');
             productInput.value = cart.quantiteProduit;
 
+//-----On recherche l' ID du produit à modifier-----
+    let changeQtyId = productInput.closest('.cart__items').dataset.id;
+    let changeQtyColor = productInput.closest('.cart__items').dataset.color;
+//-----Déclenchement du bouton pour modifier la quantité-----
+        productInput.addEventListener('change', function(event) {
+            changeQty(changeQtyId, changeQtyColor);
+            alert ('La quantité a été mise à jour')
+            //window.location.href = 'cart.html';
+        });
+        
 //-----L'élément supprimer-----
             let productSettingsDelete = document.createElement('div');
             productDivSettings.appendChild(productSettingsDelete);
@@ -100,9 +111,9 @@ fetch("http://localhost:3000/api/products/" + cart.id)
     let deleteQtyId =  productDelete.closest('.cart__items').dataset.id;
     let deleteQtyColor = productDelete.closest('.cart__items').dataset.color;
 //-----Déclenchement du bouton au click pour supprimer-----
-    productDelete.addEventListener('click', (event) => {
+    productDelete.addEventListener('click', function() {
         deleteQty(deleteQtyId, deleteQtyColor);
-        alert('le produit a été supprimé panier.');
+        alert('Le produit a été supprimé panier.');
         window.location.href = 'cart.html';
     });
     // console.log(deleteQtyId);
@@ -139,29 +150,28 @@ function articlePriceCart() {
 articlePriceCart();
 
 //-----Modification produit-----
-function changeQty() {
-    let qtyChange = document.querySelectorAll('.itemQuantity');
-    console.log(qtyChange);
-    qtyChange.forEach((qtybtnChange) => {
+function changeQty(changeQtyId, changeQtyColor) {
+    let totalModif = 0;
+    let newQtyPanier = 0;
+//-----On récupère les données du LS------
+    let cartSelect = JSON.parse(localStorage.getItem('cart'));   
+    console.log(cartSelect)
+    for (j = 0; j < cartSelect.length; j++) {
+        if (cartSelect[j].id === changeQtyId && cartSelect[j].couleurProduit === changeQtyColor) {
+            let newQtyProduct = document.getElementById('itemQuantity');
+            console.log(newQtyProduct.value);
+            // newQtyPanier +=  newQtyProduct.value;
+            // console.log(newQtyPanier)
 
-//-----Déclenchement de l'écoute du bouton-----
-            qtybtnChange.addEventListener('change', (event) => {
-                event.preventDefault(event);
-                console.log(qtybtnChange);
-//-----On recherche l' ID du produit à modifier-----
-                let changeQtyId = qtybtnChange.closest('.cart__items').dataset.id;
-                let changeQtyColor = qtybtnChange.closest('.cart__items').dataset.color;
-                console.log(changeQtyId);
-                console.log(changeQtyColor);
-//-----Récupération des données dans le localStorage-----
-    let cartSelect = JSON.parse(localStorage.getItem('cart'));
-        console.log(cartSelect);
-
-            }
-        )
-        })
-    }         
-changeQty();
+            //newQty.textContent = totalModif;
+            //console.log(cartSelect[j].quantiteProduit);
+        }
+    }
+//-----Mise à jour du LocalStorage-----
+    localStorage.setItem('cart', JSON.stringify(cartSelect)); 
+    //console.log(cartSelect)
+    }
+  
 
 //-----Suppression de produits-----
 function deleteQty(deleteQtyId, deleteQtyColor) {
@@ -169,13 +179,111 @@ function deleteQty(deleteQtyId, deleteQtyColor) {
     let cartSelect = JSON.parse(localStorage.getItem('cart'));
 //-----On filtre les articles que l'on veut garder-----
     cartSelect = cartSelect.filter((elm) => elm.id !== deleteQtyId && elm.couleurProduit !== deleteQtyColor);
-
 //-----Mise à jour du LocalStorage-----
     localStorage.setItem('cart', JSON.stringify(cartSelect));
    }
-// Actualise la page du panier
-
-deleteQty();
-
 
 //-----Validation de formulaire-----
+//-----Déclenchement du bouton au click-----
+let form = document.querySelector('#order');
+//-----Déclenchement du bouton au click-----
+form.addEventListener('click', function() {
+//-----On récupère les éléments HTML grâce aux ID-----
+const validationForm = {
+    firstName: document.querySelector('#firstName').value,
+    lastName: document.querySelector ('#lastName').value,
+    address: document.querySelector('#address').value,
+    city: document.querySelector('#city').value,
+    email: document.querySelector('#email').value,
+};
+console.log(validationForm);
+
+let firstNameErr = document.querySelector('#firstNameErrorMsg');
+let lastNameErr = document.querySelector('#lastNameErrorMsg');
+let addressErr = document.querySelector('#addressErrorMsg');
+let cityErr = document.querySelector('#cityErrorMsg');
+let emailErr = document.querySelector('#emailErrorMsg');
+console.log(lastNameErr)
+
+//-----Les regex-----
+let textRegex = /^[a-zA-ZÀ-ÿ ,'-]+$/;
+let adresseRegex = /^[0-9]{1,3}[a-zA-ZÀ-ÿ ,.'-]+$/;
+let emailRegex = /^[a-zA-Z0-9 .-_]+@[a-zA-Z]+.[a-z]+$/;
+console.log(textRegex);
+
+function validationFirstName() {
+//-----On récupère l'Id correspondant-----
+    let firstForm = validationForm.firstName;
+    if(textRegex.test(firstForm)) {
+        firstNameErr.textContent = '';
+        return true;
+    } else {
+        firstNameErr.textContent = `Le prénom saisit n'est pas valide!`;
+        return false;
+    }
+};
+
+function validationLastName() {
+    let lastForm = validationForm.lastName;
+    if (textRegex.test(lastForm)) {
+        lastNameErr.textContent = '';
+        return true;
+    } else {
+        lastNameErr.textContent = `Le nom saisit n'est pas valide!`;
+        return false;
+    }
+};
+
+function validationAddress() {
+    let adressForm = validationForm.address;
+    if (adresseRegex.test(adressForm)) {
+        addressErr.textContent = '';
+        return true;
+    } else {
+        addressErr.textContent = `L'adresse saisit n'est pas valide`;
+        return false;
+    }
+};
+
+function validationCity() {
+    let cityForm = validationForm.city;
+    if (textRegex.test(cityForm)) {
+        cityErr.textContent = '';
+        return true;
+    } else {
+        cityErr.textContent = `La ville saisit n'est pas valide!`;
+        return false;
+    }
+};
+
+function validationEmail() {
+    let emailForm = validationForm.email;
+    if (emailRegex.test(emailForm)) {
+        emailErr.textContent = '';
+        return true;
+    } else {
+        emailErr.textContent = `L'email saisit n'est pas valide!`;
+        return false;
+    }
+}
+function sendForm() {
+//-----Contrôle du formulaire pour pouvoir l'envoyer au LS-----
+if (
+    validationFirstName() &&
+    validationLastName() &&
+    validationAddress() &&
+    validationCity() &&
+    validationEmail()
+){
+    localStorage.setItem('cart', JSON.stringify(cartSelect)); 
+} else {
+    alert(`Veuillez vérifier les champs de saisie!`)
+}
+
+//-----Requête POST et récupération de l'identifiant de la commande-----
+    fetch('http://localhost:3000/api/products/order', {
+        method:'POST',
+        headers: {'Content-Type': 'application/json'},
+    })    
+}
+});
