@@ -79,7 +79,7 @@ fetch("http://localhost:3000/api/products/" + cart.id)
             let productInput = document.createElement('input');
             productDivSettingsQuantity.appendChild(productInput);
             productInput.className = 'itemQuantity';
-            productInput.setAttribute('id', 'itemQuantity');
+            productInput.setAttribute('id', cart.id);
             productInput.setAttribute('type', 'number');
             productInput.setAttribute('name', 'itemQuantity');
             productInput.setAttribute('min', '1');
@@ -93,7 +93,7 @@ fetch("http://localhost:3000/api/products/" + cart.id)
         productInput.addEventListener('change', function(event) {
             changeQty(changeQtyId, changeQtyColor);
             alert ('La quantité a été mise à jour')
-            //window.location.href = 'cart.html';
+            window.location.href = 'cart.html';
         });
         
 //-----L'élément supprimer-----
@@ -151,20 +151,15 @@ articlePriceCart();
 
 //-----Modification produit-----
 function changeQty(changeQtyId, changeQtyColor) {
-    let totalModif = 0;
-    let newQtyPanier = 0;
 //-----On récupère les données du LS------
     let cartSelect = JSON.parse(localStorage.getItem('cart'));   
     console.log(cartSelect)
+    console.log(changeQtyId);
     for (j = 0; j < cartSelect.length; j++) {
         if (cartSelect[j].id === changeQtyId && cartSelect[j].couleurProduit === changeQtyColor) {
-            let newQtyProduct = document.getElementById('itemQuantity');
+            let newQtyProduct = document.getElementById(changeQtyId);
+            cartSelect[j].quantiteProduit = newQtyProduct.value; 
             console.log(newQtyProduct.value);
-            // newQtyPanier +=  newQtyProduct.value;
-            // console.log(newQtyPanier)
-
-            //newQty.textContent = totalModif;
-            //console.log(cartSelect[j].quantiteProduit);
         }
     }
 //-----Mise à jour du LocalStorage-----
@@ -188,6 +183,7 @@ function deleteQty(deleteQtyId, deleteQtyColor) {
 let form = document.querySelector('#order');
 //-----Déclenchement du bouton au click-----
 form.addEventListener('click', function() {
+    sendForm();});
 //-----On récupère les éléments HTML grâce aux ID-----
 const validationForm = {
     firstName: document.querySelector('#firstName').value,
@@ -275,15 +271,21 @@ if (
     validationCity() &&
     validationEmail()
 ){
-    localStorage.setItem('cart', JSON.stringify(cartSelect)); 
+    localStorage.setItem('validationForm', JSON.stringify(validationForm)); 
 } else {
     alert(`Veuillez vérifier les champs de saisie!`)
 }
-
-//-----Requête POST et récupération de l'identifiant de la commande-----
+//-----variable qui récupère l'ID-----
+let orderId = [];
+//-----Requête POST-----
     fetch('http://localhost:3000/api/products/order', {
         method:'POST',
+        body: JSON.stringify(validationForm),
         headers: {'Content-Type': 'application/json'},
-    })    
+    })
+    //-----Réponse API-----
+    .then((response) => response.json())
+
+
+
 }
-});
