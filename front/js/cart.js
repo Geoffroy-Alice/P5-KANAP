@@ -183,7 +183,7 @@ function deleteQty(deleteQtyId, deleteQtyColor) {
 let form = document.querySelector('#order');
 //-----Déclenchement du bouton au click-----
 form.addEventListener('click', function() {
-    sendForm();});
+
 //-----On récupère les éléments HTML grâce aux ID-----
 const validationForm = {
     firstName: document.querySelector('#firstName').value,
@@ -199,10 +199,10 @@ let lastNameErr = document.querySelector('#lastNameErrorMsg');
 let addressErr = document.querySelector('#addressErrorMsg');
 let cityErr = document.querySelector('#cityErrorMsg');
 let emailErr = document.querySelector('#emailErrorMsg');
-console.log(lastNameErr)
+console.log(firstNameErr)
 
 //-----Les regex-----
-let textRegex = /^[a-zA-ZÀ-ÿ ,'-]+$/;
+let textRegex = /^[a-zA-ZÀ-ÿ '.,-]+$/;
 let adresseRegex = /^[0-9]{1,3}[a-zA-ZÀ-ÿ ,.'-]+$/;
 let emailRegex = /^[a-zA-Z0-9 .-_]+@[a-zA-Z]+.[a-z]+$/;
 console.log(textRegex);
@@ -217,6 +217,7 @@ function validationFirstName() {
         firstNameErr.textContent = `Le prénom saisit n'est pas valide!`;
         return false;
     }
+    console.log(firstForm);
 };
 
 function validationLastName() {
@@ -262,6 +263,7 @@ function validationEmail() {
         return false;
     }
 }
+
 function sendForm() {
 //-----Contrôle du formulaire pour pouvoir l'envoyer au LS-----
 if (
@@ -278,14 +280,16 @@ if (
 //-----variable qui récupère l'ID-----
 let orderId = [];
 //-----Requête POST-----
-    fetch('http://localhost:3000/api/products/order', {
-        method:'POST',
-        body: JSON.stringify(validationForm),
-        headers: {'Content-Type': 'application/json'},
-    })
-    //-----Réponse API-----
-    .then((response) => response.json())
+    // fetch('http://localhost:3000/api/products/order', {
+    //     method:'POST',
+    //     body: JSON.stringify(validationForm),
+    //     headers: {'Content-Type': 'application/json'},
+    // })
+    // //-----Réponse API-----
+    // .then((response) => response.json())
 
 
 
 }
+sendForm();
+});
