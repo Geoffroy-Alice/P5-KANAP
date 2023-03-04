@@ -182,7 +182,8 @@ function deleteQty(deleteQtyId, deleteQtyColor) {
 //-----Déclenchement du bouton au click-----
 let form = document.querySelector('#order');
 //-----Déclenchement du bouton au click-----
-form.addEventListener('click', function() {
+form.addEventListener('click', function(event) {
+    event.preventDefault(event);
 
 //-----On récupère les éléments HTML grâce aux ID-----
 const validationForm = {
@@ -204,7 +205,7 @@ console.log(firstNameErr)
 //-----Les regex-----
 let textRegex = /^[a-zA-ZÀ-ÿ '.,-]+$/;
 let adresseRegex = /^[0-9]{1,3}[a-zA-ZÀ-ÿ ,.'-]+$/;
-let emailRegex = /^[a-zA-Z0-9 .-_]+@[a-zA-Z]+.[a-z]+$/;
+let emailRegex = /^[a-zA-Z0-9 .-_]+@([a-zA-Z]+\.)+[a-z]+$/;
 console.log(textRegex);
 
 function validationFirstName() {
@@ -217,7 +218,6 @@ function validationFirstName() {
         firstNameErr.textContent = `Le prénom saisit n'est pas valide!`;
         return false;
     }
-    console.log(firstForm);
 };
 
 function validationLastName() {
@@ -265,8 +265,10 @@ function validationEmail() {
 }
 
 function sendForm() {
+    let cartSelect = JSON.parse(localStorage.getItem('cart'));
+    console.log(cartSelect);
 //-----Contrôle du formulaire pour pouvoir l'envoyer au LS-----
-if (
+if (cartSelect !== null &&
     validationFirstName() &&
     validationLastName() &&
     validationAddress() &&
@@ -274,22 +276,30 @@ if (
     validationEmail()
 ){
     localStorage.setItem('validationForm', JSON.stringify(validationForm)); 
+    localStorage.setItem('orderId', JSON.stringify(orderId)); 
+    console.log(validationForm)
+    console.log(orderId)
 } else {
     alert(`Veuillez vérifier les champs de saisie!`)
 }
-//-----variable qui récupère l'ID-----
+//-----variable qui récupère l'ID pour envoyeé au serveur-----
 let orderId = [];
 //-----Requête POST-----
-    // fetch('http://localhost:3000/api/products/order', {
-    //     method:'POST',
-    //     body: JSON.stringify(validationForm),
-    //     headers: {'Content-Type': 'application/json'},
-    // })
-    // //-----Réponse API-----
-    // .then((response) => response.json())
-
-
-
+    fetch('http://localhost:3000/api/products/order', {
+        method:'POST',
+        body: JSON.stringify({validationForm, orderId}),
+        headers: {'Content-Type': 'application/json'},
+    })
+//-----Réponse API que l'on stock-----
+    .then((response) => response.json())
+    .then ((server) => { 
+        orderId = server.orderId;
+        console.log(orderId);
+//-----Si il y a des données, on redirige vers la page de confirmation-----
+        if (orderId != 0) {
+            window.location.href = 'confirmation.html?id=' +orderId;
+        }
+    });
 }
 sendForm();
 });
