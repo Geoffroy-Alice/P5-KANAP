@@ -4,6 +4,7 @@ var searchParams = new URLSearchParams(paramsString);
 var articleId = searchParams.get("id");
 console.log(articleId);
 
+function detailProduct () {
 //-----on récupère les données de l'api-----
 fetch("http://localhost:3000/api/products/" + articleId)
 //-----promesse pour récupérer la réponse en json-----
@@ -39,7 +40,11 @@ fetch("http://localhost:3000/api/products/" + articleId)
                 
                 colorsKanap.appendChild(colorOption);
             }
-    });
+    })
+}
+detailProduct();
+
+function productLocalStorage() {
 //-----bouton ajouter au panier-----
         let btn = document.getElementById('addToCart');
 //-----déclenchement du bouton addToCart au clic-----
@@ -59,7 +64,7 @@ fetch("http://localhost:3000/api/products/" + articleId)
             } 
 //-----si la quantité selectionnée n'est pas entre zéro et cent, on affiche un message d'erreur-----
             else if (choiceQuantity < 1 || choiceQuantity > 100) {
-                alert('Veuillez sélectionner une quantité entre 0 et 100.');
+                alert('Veuillez sélectionner une quantité entre 1 et 100.');
             }
 //----- si la couleur et la quantité sont sélectionnees-----
                 else {
@@ -102,4 +107,6 @@ fetch("http://localhost:3000/api/products/" + articleId)
             }
         };
         }
-        });
+        })
+}
+productLocalStorage();

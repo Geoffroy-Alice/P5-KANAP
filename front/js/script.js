@@ -1,4 +1,5 @@
-var listKanap = []
+var listKanap = [];
+function alldata() {
 //-----on récupère les données de l'API-----
 fetch("http://localhost:3000/api/products")
 //-----première promesse pour récupérer la réponse en json-----
@@ -39,3 +40,5 @@ fetch("http://localhost:3000/api/products")
   )
   //-----message en cas d'erreur-----
   .catch(error => console.log(`Une erreur s'est produite. Veuillez nous en excuser!`, error));
+}
+alldata();

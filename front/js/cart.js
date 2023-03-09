@@ -266,6 +266,7 @@ function validationEmail() {
 
 function sendForm() {
     let cartSelect = JSON.parse(localStorage.getItem('cart'));
+//-----variable qui récupère l'ID pour envoyeé au serveur-----
     console.log(cartSelect);
 //-----Contrôle du formulaire pour pouvoir l'envoyer au LS-----
 if (cartSelect !== null &&
@@ -276,30 +277,30 @@ if (cartSelect !== null &&
     validationEmail()
 ){
     localStorage.setItem('validationForm', JSON.stringify(validationForm)); 
-    localStorage.setItem('orderId', JSON.stringify(orderId)); 
-    console.log(validationForm)
-    console.log(orderId)
-} else {
-    alert(`Veuillez vérifier les champs de saisie!`)
-}
-//-----variable qui récupère l'ID pour envoyeé au serveur-----
-let orderId = [];
+    console.log(validationForm);
+
 //-----Requête POST-----
     fetch('http://localhost:3000/api/products/order', {
         method:'POST',
-        body: JSON.stringify({validationForm, orderId}),
+        body: JSON.stringify({validationForm,cartSelect}),
         headers: {'Content-Type': 'application/json'},
     })
 //-----Réponse API que l'on stock-----
     .then((response) => response.json())
     .then ((server) => { 
         orderId = server.orderId;
+        console.log(server);
         console.log(orderId);
 //-----Si il y a des données, on redirige vers la page de confirmation-----
-        if (orderId != 0) {
-            window.location.href = 'confirmation.html?id=' +orderId;
-        }
+        // if (orderId != 0) {
+        //     window.location.href = 'confirmation.html?id=' +;
+        // }
+        alert('Votre commende a bien été enregistrée!')
+        window.location.href = 'confirmation.html';
     });
+} else {
+    alert(`Veuillez vérifier les champs de saisie!`);
+}
 }
 sendForm();
 });
