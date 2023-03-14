@@ -2,11 +2,11 @@
 let cartSelect = JSON.parse(localStorage.getItem('cart'));
 console.log(cartSelect);
 const positionCart = document.getElementById('cart__items');
-let kanaps = [];
 
 function allcart() {
+
 //-----Si le panier est vide-----
-    if (cartSelect === 0 || cartSelect === null) {
+    if (cartSelect.length === 0 || cartSelect === null) {
         document.querySelector('h1').textContent = 'Votre panier est vide';
 //-----Si il contient au moins un produit-----
     } else {
@@ -115,7 +115,9 @@ fetch("http://localhost:3000/api/products/" + cart.id)
         deleteQty(deleteQtyId, deleteQtyColor);
         alert('Le produit a été supprimé panier.');
         window.location.href = 'cart.html';
+        console.log(cartSelect);
     });
+
     // console.log(deleteQtyId);
     // console.log(deleteQtyColor);
         }
@@ -174,7 +176,7 @@ function deleteQty(deleteQtyId, deleteQtyColor) {
     let cartSelect = JSON.parse(localStorage.getItem('cart'));
 //-----On filtre les articles que l'on veut garder-----
     cartSelect = cartSelect.filter((elm) => elm.id !== deleteQtyId && elm.couleurProduit !== deleteQtyColor);
-//-----Mise à jour du LocalStorage-----
+    //-----Mise à jour du LocalStorage-----
     localStorage.setItem('cart', JSON.stringify(cartSelect));
    }
 
@@ -266,8 +268,7 @@ function validationEmail() {
 
 function sendForm() {
     let cartSelect = JSON.parse(localStorage.getItem('cart'));
-//-----variable qui récupère l'ID pour envoyeé au serveur-----
-    console.log(cartSelect);
+    //console.log(cartSelect);
 //-----Contrôle du formulaire pour pouvoir l'envoyer au LS-----
 if (cartSelect !== null &&
     validationFirstName() &&
@@ -276,28 +277,37 @@ if (cartSelect !== null &&
     validationCity() &&
     validationEmail()
 ){
+
+//-----Tableau des produits-----
+let kanaps = [];
+    for (let i = 0; i < cartSelect.length; i ++) {
+        kanaps.push(cartSelect[i].id);
+        //console.log(cartSelect[i].id)
+    }
+//-----Stockage des contact et des produits-----
     localStorage.setItem('validationForm', JSON.stringify(validationForm)); 
-    console.log(validationForm);
+    //console.log(validationForm);
+    localStorage.setItem('kanaps', JSON.stringify('kanaps'));
+    //console.log(kanaps);
 
 //-----Requête POST-----
     fetch('http://localhost:3000/api/products/order', {
         method:'POST',
-        body: JSON.stringify({validationForm,cartSelect}),
         headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({validationForm, kanaps}),
     })
 //-----Réponse API que l'on stock-----
     .then((response) => response.json())
-    .then ((server) => { 
-        orderId = server.orderId;
+//-----Récupération du numéro de commande, on vide le LS et on redirige vers la page de confirmation-----
+    .then (server => { 
         console.log(server);
-        console.log(orderId);
-//-----Si il y a des données, on redirige vers la page de confirmation-----
-        // if (orderId != 0) {
-        //     window.location.href = 'confirmation.html?id=' +;
-        // }
+        localStorage.setItem('orderId', server.orderId);
+        console.log('server.orderId')
         alert('Votre commende a bien été enregistrée!')
-        window.location.href = 'confirmation.html';
+        //window.location.href = 'confirmation.html?id=${server.orderId}';
+        //window.localStorage.clear();
     });
+//-----Message en cas d'erreur-----
 } else {
     alert(`Veuillez vérifier les champs de saisie!`);
 }
