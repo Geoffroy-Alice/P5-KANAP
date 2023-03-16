@@ -286,15 +286,22 @@ let kanaps = [];
     }
 //-----Stockage des contact et des produits-----
     localStorage.setItem('validationForm', JSON.stringify(validationForm)); 
-    //console.log(validationForm);
+    console.log(validationForm);
     localStorage.setItem('kanaps', JSON.stringify('kanaps'));
-    //console.log(kanaps);
+    console.log(kanaps);
 
 //-----Requête POST-----
     fetch('http://localhost:3000/api/products/order', {
         method:'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({validationForm, kanaps}),
+        body: JSON.stringify({contact: {
+               firstName: validationForm.firstName,
+               lastName: validationForm.lastName,
+               address: validationForm.address,
+               city: validationForm.city,
+               email: validationForm.email
+             }, products:
+            [kanaps]}),
     })
 //-----Réponse API que l'on stock-----
     .then((response) => response.json())
@@ -302,9 +309,9 @@ let kanaps = [];
     .then (server => { 
         console.log(server);
         localStorage.setItem('orderId', server.orderId);
-        console.log('server.orderId')
+        console.log(server.orderId);
         alert('Votre commende a bien été enregistrée!')
-        //window.location.href = 'confirmation.html?id=${server.orderId}';
+        window.location.href = 'confirmation.html?id='+server.orderId;
         //window.localStorage.clear();
     });
 //-----Message en cas d'erreur-----
