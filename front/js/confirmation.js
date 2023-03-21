@@ -7,7 +7,7 @@ const orderId = id.get('id');
 const idConfirmation = document.querySelector('#orderId');
 idConfirmation.textContent = orderId;
 //-----On vide le LS une fois la commande passée-----
-//localStorage.clear();
+localStorage.clear();
 console.log(id);
 }
 confirmation();

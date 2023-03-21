@@ -6,7 +6,7 @@ const positionCart = document.getElementById('cart__items');
 function allcart() {
 
 //-----Si le panier est vide-----
-    if (cartSelect.length === 0 || cartSelect === null) {
+    if (cartSelect == 0 || cartSelect === null) {
         document.querySelector('h1').textContent = 'Votre panier est vide';
 //-----Si il contient au moins un produit-----
     } else {
@@ -181,7 +181,6 @@ function deleteQty(deleteQtyId, deleteQtyColor) {
    }
 
 //-----Validation de formulaire-----
-//-----Déclenchement du bouton au click-----
 let form = document.querySelector('#order');
 //-----Déclenchement du bouton au click-----
 form.addEventListener('click', function(event) {
@@ -312,7 +311,6 @@ let kanaps = [];
         console.log(server.orderId);
         alert('Votre commende a bien été enregistrée!')
         window.location.href = 'confirmation.html?id='+server.orderId;
-        //window.localStorage.clear();
     });
 //-----Message en cas d'erreur-----
 } else {
