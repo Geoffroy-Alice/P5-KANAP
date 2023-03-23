@@ -304,7 +304,7 @@ let kanaps = [];
     })
 //-----Réponse API que l'on stock-----
     .then((response) => response.json())
-//-----Récupération du numéro de commande, on vide le LS et on redirige vers la page de confirmation-----
+//-----Récupération du numéro de commande et on redirige vers la page de confirmation-----
     .then (server => { 
         console.log(server);
         localStorage.setItem('orderId', server.orderId);
