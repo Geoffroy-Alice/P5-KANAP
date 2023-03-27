@@ -91,9 +91,13 @@ fetch("http://localhost:3000/api/products/" + cart.id)
     let changeQtyColor = productInput.closest('.cart__items').dataset.color;
 //-----Déclenchement du bouton pour modifier la quantité-----
         productInput.addEventListener('change', function(event) {
-            changeQty(changeQtyId, changeQtyColor);
-            alert ('La quantité a été mise à jour')
-            window.location.href = 'cart.html';
+            if (productInput.value < 1 || productInput.value > 100) {
+                alert('Veuillez sélectionner une quantité entre 1 et 100.');
+            } else {
+                alert ('La quantité a été mise à jour')
+                window.location.href = 'cart.html';
+            } 
+            changeQty(changeQtyId, changeQtyColor)
         });
         
 //-----L'élément supprimer-----
@@ -157,7 +161,7 @@ function changeQty(changeQtyId, changeQtyColor) {
     let cartSelect = JSON.parse(localStorage.getItem('cart'));   
     console.log(cartSelect)
     console.log(changeQtyId);
-    for (j = 0; j < cartSelect.length; j++) {
+    for (j = 0; j < cartSelect.length; j++) { 
         if (cartSelect[j].id === changeQtyId && cartSelect[j].couleurProduit === changeQtyColor) {
             let newQtyProduct = document.getElementById(changeQtyId);
             cartSelect[j].quantiteProduit = newQtyProduct.value; 
