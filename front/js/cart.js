@@ -4,7 +4,6 @@ console.log(cartSelect);
 const positionCart = document.getElementById('cart__items');
 
 function allcart() {
-
 //-----Si le panier est vide-----
     if (cartSelect == 0 || cartSelect === null) {
         document.querySelector('h1').textContent = 'Votre panier est vide';
@@ -21,9 +20,9 @@ fetch("http://localhost:3000/api/products/" + cart.id)
 //-----L'élément article-----
             let productArticle = document.createElement('article');
             positionCart.appendChild(productArticle);
-            productArticle.className = "cart__items";
-            productArticle.setAttribute('data-id', cart.id)
-            productArticle.setAttribute('data-color',cart.couleurProduit)
+            productArticle.className = 'cart__item';
+            productArticle.setAttribute('data-id', cart.id);
+            productArticle.setAttribute('data-color',cart.couleurProduit);
 
 //-----L'élément div image-----
             let productDivImage = document.createElement('div');
@@ -87,8 +86,8 @@ fetch("http://localhost:3000/api/products/" + cart.id)
             productInput.value = cart.quantiteProduit;
 
 //-----On recherche l' ID du produit à modifier-----
-    let changeQtyId = productInput.closest('.cart__items').dataset.id;
-    let changeQtyColor = productInput.closest('.cart__items').dataset.color;
+    let changeQtyId = productInput.closest('.cart__item').dataset.id;
+    let changeQtyColor = productInput.closest('.cart__item').dataset.color;
 //-----Déclenchement du bouton pour modifier la quantité-----
         productInput.addEventListener('change', function(event) {
             if (productInput.value < 1 || productInput.value > 100) {
@@ -112,8 +111,8 @@ fetch("http://localhost:3000/api/products/" + cart.id)
             productDelete.innerHTML = 'Supprimer';
 
 //-----ID et couleur à supprimer-----
-    let deleteQtyId =  productDelete.closest('.cart__items').dataset.id;
-    let deleteQtyColor = productDelete.closest('.cart__items').dataset.color;
+    let deleteQtyId =  productDelete.closest('.cart__item').dataset.id;
+    let deleteQtyColor = productDelete.closest('.cart__item').dataset.color;
 //-----Déclenchement du bouton au click pour supprimer-----
     productDelete.addEventListener('click', function() {
         deleteQty(deleteQtyId, deleteQtyColor);
