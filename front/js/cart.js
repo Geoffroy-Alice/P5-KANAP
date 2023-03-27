@@ -309,7 +309,7 @@ let kanaps = [];
         console.log(server);
         localStorage.setItem('orderId', server.orderId);
         console.log(server.orderId);
-        alert('Votre commende a bien été enregistrée!')
+        alert('Votre commande a bien été enregistrée!')
         window.location.href = 'confirmation.html?id='+server.orderId;
     });
 //-----Message en cas d'erreur-----
