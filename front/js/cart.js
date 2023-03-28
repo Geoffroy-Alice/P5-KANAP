@@ -282,10 +282,11 @@ if (cartSelect !== null &&
 
 //-----Tableau des produits-----
 let kanaps = [];
-    for (let i = 0; i < cartSelect.length; i ++) {
+    for (let i = 0; i < cartSelect.length; i++) {
         kanaps.push(cartSelect[i].id);
-        //console.log(cartSelect[i].id)
+        console.log(cartSelect[i].id);
     }
+    
 //-----Stockage des contact et des produits-----
     localStorage.setItem('validationForm', JSON.stringify(validationForm)); 
     console.log(validationForm);
@@ -294,16 +295,17 @@ let kanaps = [];
 
 //-----Requête POST-----
     fetch('http://localhost:3000/api/products/order', {
-        method:'POST',
-        headers: {'Content-Type': 'application/json'},
+        method: "POST",
+        headers: { Accept : 'application/json',
+            'Content-Type': 'application/json'},
         body: JSON.stringify({contact: {
-               firstName: validationForm.firstName,
-               lastName: validationForm.lastName,
-               address: validationForm.address,
-               city: validationForm.city,
-               email: validationForm.email
-             }, products:
-            [kanaps]}),
+            firstName: validationForm.firstName,
+            lastName: validationForm.lastName,
+            address: validationForm.address,
+            city: validationForm.city,
+            email: validationForm.email
+            }, products:
+            kanaps}),
     })
 //-----Réponse API que l'on stock-----
     .then((response) => response.json())
@@ -312,7 +314,7 @@ let kanaps = [];
         console.log(server);
         localStorage.setItem('orderId', server.orderId);
         console.log(server.orderId);
-        alert('Votre commande a bien été enregistrée!')
+        alert('Votre commande a bien été enregistrée!');
         window.location.href = 'confirmation.html?id='+server.orderId;
     });
 //-----Message en cas d'erreur-----
